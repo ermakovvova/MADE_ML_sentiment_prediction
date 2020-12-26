@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Iterable
 
 from dto.model import ModelResult
 
@@ -16,3 +16,11 @@ class Twit:
 class ScoredTwit:
     twit: Twit
     model_results: Dict[str, ModelResult]
+
+
+@dataclass
+class PagedResult:
+    twits: Iterable[ScoredTwit]
+    total: int
+    page: int
+    page_size: int

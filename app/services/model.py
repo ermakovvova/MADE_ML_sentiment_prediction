@@ -1,21 +1,19 @@
-import abc
+from typing import Iterable, Dict
 
 from dto.model import ModelResult
 from dto.twit import Twit
+from models import Model
 
 
-class Model:
-    def __init__(self, name):
-        self.name = name
+class ModelService:
+    def __init__(self, models: Iterable[Model]):
+        self._models = models
 
-    @abc.abstractmethod
-    def score(self, twit: Twit) -> ModelResult:
-        pass
+    def score(self, twit: Twit) -> Dict[str, ModelResult]:
+        return {
+            model.name: model.score(twit)
+            for model in self._models
+        }
 
-
-class NaiveModel(Model):
-    def __init__(self):
-        super().__init__('naive')
-
-    def score(self, twit: Twit) -> ModelResult:
-        return ModelResult(0.5, True)
+    def get_models(self):
+        return {model.name: model.threshold for model in self._models}

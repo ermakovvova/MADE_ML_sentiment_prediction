@@ -2,6 +2,7 @@ from dependency_injector import containers, providers
 from pymongo import MongoClient
 
 import dao
+import models
 import services
 
 
@@ -31,14 +32,22 @@ class Container(containers.DeclarativeContainer):
     )
 
     naive_model = providers.Singleton(
-        services.model.NaiveModel
+        models.NaiveModel
     )
     models = [
-        naive_model
+        naive_model,
+        providers.Singleton(
+            models.TestModel
+        )
     ]
+
+    model_service = providers.Singleton(
+        services.model.ModelService,
+        models=providers.List(*models),
+    )
 
     twit_service = providers.Singleton(
         services.twit.TwitService,
         twit_dao=twit_dao,
-        models=providers.List(*models),
+        model_service=model_service,
     )
