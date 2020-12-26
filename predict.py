@@ -1,8 +1,8 @@
 import joblib
 
 
-MODEL_FILEPATH = 'model_dump.pkl'
-TEST_DATA_FILEPATH = 'test_data.txt'
+MODEL_FILEPATH = 'models/model_dump.pkl'
+TEST_DATA_FILEPATH = 'source/test_data.txt'
 
 
 def load_data(test_data_filepath):
