@@ -13,5 +13,5 @@ def render_result(twits_page: PagedResult):
 @inject
 def get_tweets_page(twit_service: TwitService = Provide[Container.twit_service]):
     page = int(request.args.get('page', 0))
-    tweets = twit_service.get_twits(page)
-    return render_result(tweets)
+    twits = twit_service.get_twits(page)
+    return render_result(twits)

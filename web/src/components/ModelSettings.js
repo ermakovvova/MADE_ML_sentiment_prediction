@@ -55,15 +55,14 @@ export function ModelSettings({ onChangeModelSettings }) {
   useEffect(() => {
     fetchModels().then((res) => {
       setModels(res);
-      console.log(onChangeModelSettings);
       if (chosenModel === DEFAULT_MODEL) {
         const new_model = Object.keys(res)[0];
         setChosenModel(new_model);
         setChosenThreshold(res[new_model]);
-        onChangeModelSettings(new_model, res[new_model]);
+        // onChangeModelSettings(new_model, res[new_model]);
       }
     });
-  }, [chosenModel, onChangeModelSettings]);
+  }, [chosenModel]);
   const handleModelChange = useCallback(
     (event) => {
       const new_model = event.target.value;
@@ -113,7 +112,7 @@ export function ModelSettings({ onChangeModelSettings }) {
             valueLabelDisplay="auto"
             onChange={handleThresholdChange}
           />
-          <FormHelperText>Выберите порог {chosenModel}</FormHelperText>
+          <FormHelperText>Выберите порог</FormHelperText>
         </FormControl>
       )}
 

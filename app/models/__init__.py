@@ -14,14 +14,6 @@ class Model:
         pass
 
 
-class NaiveModel(Model):
-    def __init__(self):
-        super().__init__('naive', 0.5)
-
-    def score(self, twit: Twit) -> ModelResult:
-        return ModelResult(0.5, True)
-
-
 class TestModel(Model):
     def __init__(self):
         super().__init__('test', None)
