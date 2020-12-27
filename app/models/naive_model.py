@@ -5,7 +5,7 @@ import joblib
 from dto.model import ModelResult
 from dto.twit import Twit
 from models import Model
-from preprocess_data.preprocess_text import preprocess_text
+from utils.preprocess_text import preprocess_text
 
 
 MODEL_FILEPATH = pathlib.Path(__file__).parent.joinpath('dumps', 'model_dump.pkl')
