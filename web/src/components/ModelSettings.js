@@ -59,7 +59,7 @@ export function ModelSettings({ onChangeModelSettings }) {
         const new_model = Object.keys(res)[0];
         setChosenModel(new_model);
         setChosenThreshold(res[new_model]);
-        // onChangeModelSettings(new_model, res[new_model]);
+        onChangeModelSettings(new_model, res[new_model]);
       }
     });
   }, [chosenModel]);
@@ -75,9 +75,16 @@ export function ModelSettings({ onChangeModelSettings }) {
   const handleThresholdChange = useCallback(
     (_, val) => {
       setChosenThreshold(val);
-      onChangeModelSettings(chosenModel, val);
     },
     [chosenModel, onChangeModelSettings]
+  );
+  const commitThresholdChange = useCallback(
+      (_, val) => {
+          console.log('commit');
+          setChosenThreshold(val);
+          onChangeModelSettings(chosenModel, val);
+      },
+      [chosenModel, onChangeModelSettings]
   );
   const loaded = Object.keys(models).length > 0;
   return (
@@ -110,6 +117,7 @@ export function ModelSettings({ onChangeModelSettings }) {
             max={1.0}
             valueLabelDisplay="auto"
             onChange={handleThresholdChange}
+            onChangeCommitted={commitThresholdChange}
           />
           <FormHelperText>Выберите порог</FormHelperText>
         </FormControl>
