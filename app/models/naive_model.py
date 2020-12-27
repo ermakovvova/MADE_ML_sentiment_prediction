@@ -1,11 +1,12 @@
 import os
 import pathlib
+import joblib
 
 from dto.model import ModelResult
 from dto.twit import Twit
 from models import Model
+from preprocess_data.preprocess_text import preprocess_text
 
-import joblib
 
 MODEL_FILEPATH = pathlib.Path(__file__).parent.joinpath('dumps', 'model_dump.pkl')
 
@@ -25,6 +26,7 @@ class NaiveModel(Model):
             self._model = joblib.load(fin)
 
     def score(self, twit: Twit) -> ModelResult:
-        pred = self._model.predict_proba([twit.text])
+        text = preprocess_text(twit.text)
+        pred = self._model.predict_proba([text])
         pred = float(pred[0][1])
         return ModelResult(pred, pred > self.threshold)
