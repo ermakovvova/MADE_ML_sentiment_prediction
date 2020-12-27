@@ -1,4 +1,5 @@
 import os
+from enum import Enum
 
 from flask import Flask
 
@@ -6,12 +7,16 @@ import resources
 from containers import Container
 
 
-def create_app(is_dev) -> Flask:
+class Env(Enum):
+    PROD = 'prod'
+    DEV = 'dev'
+    LOCAL = 'local'
+
+
+def create_app(env: Env) -> Flask:
     container = Container()
-    if is_dev:
-        container.config.from_yaml('config.dev.yml')
-    else:
-        container.config.from_yaml('config.yml')
+    container.config.from_yaml(f'config.{env.value}.yml')
+    if env == Env.PROD:
         container.config.mongo.username.from_env('MONGO_USER')
         container.config.mongo.password.from_env('MONGO_PASS')
     container.wire(modules=resources.all_resources)
@@ -25,8 +30,9 @@ def create_app(is_dev) -> Flask:
 
 
 if __name__ == '__main__':
-    is_dev = os.environ.get('MODE', 'dev') == 'dev'
-    app = create_app(is_dev)
+    env = Env(os.environ.get('MODE', 'local'))
+    app = create_app(env)
+    is_dev = env in (Env.DEV, Env.LOCAL)
     if is_dev:
         from flask_cors import CORS
 
