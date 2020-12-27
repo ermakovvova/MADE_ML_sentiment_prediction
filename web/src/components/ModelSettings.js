@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function fetchModels() {
-  return fetch("/models").then((res) => res.json());
+  return fetch("/api/models").then((res) => res.json());
 }
 
 export function ModelSettings({ onChangeModelSettings }) {

@@ -5,7 +5,7 @@ import { Twit } from "./Twit";
 import { DEFAULT_MODEL } from "../persistence/model_settings";
 
 function load_twits(page) {
-  return fetch(`/twits?page=${page}`).then((res) => res.json());
+  return fetch(`/api/twits?page=${page}`).then((res) => res.json());
 }
 
 function filter(twits, setting) {

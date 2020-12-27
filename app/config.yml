@@ -1,6 +1,4 @@
 mongo:
-  host: localhost
-  port: 27017
+  host: mongo
+  port: 57017
   db: healthytwitter
-  username: root
-  password: example

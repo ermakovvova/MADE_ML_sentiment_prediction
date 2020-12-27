@@ -2,3 +2,4 @@ flask==1.1.2
 pymongo==3.11.2
 dependency-injector==4.5.4
 pyyaml==5.3.1
+flask-cors==3.0.9
