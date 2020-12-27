@@ -8,7 +8,7 @@ from models import Model
 from utils.preprocess_text import preprocess_text
 
 
-MODEL_FILEPATH = pathlib.Path(__file__).parent.joinpath('dumps', 'model_dump.pkl')
+MODEL_FILEPATH = pathlib.Path(__file__).parent.joinpath('dumps', 'naive_model_dump.pkl')
 
 
 def load_data(test_data_filepath):
