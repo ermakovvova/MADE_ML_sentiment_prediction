@@ -16,6 +16,8 @@ const useStyles = makeStyles((theme) => ({
     },
     author: {},
     text: {},
+    acc: {'flex-direction': 'column'},
+    full: {flex: '0 0 100%'}
 }));
 
 function filter(twits, setting) {
@@ -29,7 +31,7 @@ function filter(twits, setting) {
         const thr_le_score =
             thr !== null &&
             model in t['model_results'] &&
-            t['model_results'][model]['score'] <= thr;
+            t['model_results'][model]['score'] >= thr;
         const thr_null_but_positive =
             thr === null &&
             model in t['model_results'] &&

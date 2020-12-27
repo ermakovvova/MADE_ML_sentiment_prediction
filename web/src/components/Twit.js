@@ -25,10 +25,17 @@ export function Twit({twit_res, classes}) {
         >
             <Typography className={classes.heading}>{twit["author"]}</Typography>
         </AccordionSummary>
-        <AccordionDetails>
-            <Typography>
-                {twit["text"]}
-            </Typography>
+        <AccordionDetails className={classes.acc}>
+            <div className={classes.full}>
+                <Typography>
+                    {twit["text"]}
+                </Typography>
+            </div>
+            <div className={classes.full}>
+                <Typography>
+                    {JSON.stringify(model_results)}
+                </Typography>
+            </div>
         </AccordionDetails>
     </Accordion>);
 }
