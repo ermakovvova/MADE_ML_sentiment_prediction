@@ -35,11 +35,12 @@ class Container(containers.DeclarativeContainer):
     naive_model = providers.Singleton(
         NaiveModel
     )
+    test_model = providers.Singleton(
+        models.TestModel
+    )
     models = [
         naive_model,
-        providers.Singleton(
-            models.TestModel
-        )
+        test_model,
     ]
 
     model_service = providers.Singleton(
