@@ -103,7 +103,6 @@ export function ModelSettings({ onChangeModelSettings }) {
         <FormControl className={classes.formControl}>
           <Slider
             value={chosenThreshold}
-            // getAriaValueText={valuetext}
             aria-labelledby="discrete-slider-small-steps"
             step={0.05}
             marks
