@@ -1,16 +1,15 @@
 import pathlib
 import joblib
 import json
+import tensorflow as tf
 
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import model_from_json
-
 
 from dto.model import ModelResult
 from dto.twit import Twit
 from models import Model
 from utils.preprocess_text import preprocess_text
-
 
 MODEL_CONFIG_FILEPATH = pathlib.Path(__file__).parent.joinpath('dumps', 'cnn_model.json')
 MODEL_WEIGHTS_FILEPATH = pathlib.Path(__file__).parent.joinpath('dumps', 'cnn_model_weights')
@@ -34,7 +33,10 @@ class CnnModel(Model):
 
     def score(self, twit: Twit) -> ModelResult:
         text = preprocess_text(twit.text)
-        text = get_sequences(self._tokenizer, [text])
-        pred = self._model.predict(text)
-        pred = float(pred[0][0])
-        return ModelResult(pred, pred > self.threshold)
+        session = tf.Session()
+        with session.as_default():
+            with session.graph.as_default():
+                text = get_sequences(self._tokenizer, [text])
+                pred = self._model.predict(text)
+                pred = float(pred[0][0])
+                return ModelResult(pred, pred > self.threshold)
