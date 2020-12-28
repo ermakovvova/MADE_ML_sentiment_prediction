@@ -25,7 +25,7 @@ def get_sequences(tokenizer, x):
 
 class CnnModel(Model):
     def __init__(self):
-        super().__init__('cnn', 0.5)
+        super().__init__('CNN', 0.5)
         with open(MODEL_CONFIG_FILEPATH, 'r') as fin:
             json_config_loaded = json.load(fin)
         self._model = model_from_json(json_config_loaded)

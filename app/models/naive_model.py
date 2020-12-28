@@ -21,7 +21,7 @@ def load_data(test_data_filepath):
 
 class NaiveModel(Model):
     def __init__(self):
-        super().__init__('naive', 0.5)
+        super().__init__('NaiveBayes', 0.5)
         with open(MODEL_FILEPATH, 'rb') as fin:
             self._model = joblib.load(fin)
 
