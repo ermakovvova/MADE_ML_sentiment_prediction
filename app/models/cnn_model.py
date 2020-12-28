@@ -9,6 +9,7 @@ from keras.models import model_from_json
 from dto.model import ModelResult
 from dto.twit import Twit
 from models import Model
+from utils.preprocess_text import preprocess_text
 
 
 MODEL_CONFIG_FILEPATH = pathlib.Path(__file__).parent.joinpath('dumps', 'cnn_model.json')
@@ -34,7 +35,8 @@ class CnnModel(Model):
             self._tokenizer = joblib.load(fin)
 
     def score(self, twit: Twit) -> ModelResult:
-        text = get_sequences(self._tokenizer, [twit.text])
+        text = preprocess_text(twit.text)
+        text = get_sequences(self._tokenizer, [text])
         pred = self._model.predict_proba(text)
         pred = float(pred[0][0])
         return ModelResult(pred, pred > self.threshold)
