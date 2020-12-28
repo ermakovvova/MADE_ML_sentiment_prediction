@@ -29,14 +29,14 @@ class CnnModel(Model):
         with open(MODEL_CONFIG_FILEPATH, 'r') as fin:
             json_config_loaded = json.load(fin)
         self._model = model_from_json(json_config_loaded)
-        self._model.load_weights('MODEL_WEIGHTS_FILEPATH')
+        self._model.load_weights(MODEL_WEIGHTS_FILEPATH)
 
-        with open('tokenizer.pkl', 'rb') as fin:
+        with open(TOKENIZER_FILEPATH, 'rb') as fin:
             self._tokenizer = joblib.load(fin)
 
     def score(self, twit: Twit) -> ModelResult:
         text = preprocess_text(twit.text)
         text = get_sequences(self._tokenizer, [text])
-        pred = self._model.predict_proba(text)
+        pred = self._model.predict(text)
         pred = float(pred[0][0])
         return ModelResult(pred, pred > self.threshold)

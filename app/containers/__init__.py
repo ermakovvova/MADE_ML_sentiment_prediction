@@ -5,6 +5,7 @@ import dao
 import models
 import services
 from models.naive_model import NaiveModel
+from models.cnn_model import CnnModel
 
 
 def create_db(mongo_client, db):
@@ -35,12 +36,12 @@ class Container(containers.DeclarativeContainer):
     naive_model = providers.Singleton(
         NaiveModel
     )
-    test_model = providers.Singleton(
-        models.TestModel
+    cnn_model = providers.Singleton(
+        CnnModel
     )
     models = [
         naive_model,
-        test_model,
+        cnn_model
     ]
 
     model_service = providers.Singleton(
