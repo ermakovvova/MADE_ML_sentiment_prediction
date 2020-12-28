@@ -12,7 +12,10 @@ import {
   DEFAULT_MODEL,
   useModel,
   useThreshold,
+  useDebug,
 } from "../persistence/model_settings";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -36,9 +39,11 @@ export function ModelSettings({ onChangeModelSettings }) {
 
   const [persistedModel, setPersistedModel] = useModel(DEFAULT_MODEL);
   const [persistedThreshold, setPersistedThreshold] = useThreshold(null);
+  const [persistedDebug, setPersistedDebug] = useDebug(false);
 
   const [chosenModel, setChosenModel] = useState(persistedModel);
   const [chosenThreshold, setChosenThreshold] = useState(persistedThreshold);
+  const [chosenDebug, setChosenDebug] = useState(persistedDebug);
 
   const handlePersist = useCallback(
     (_) => {
@@ -48,8 +53,16 @@ export function ModelSettings({ onChangeModelSettings }) {
       setPersistedThreshold(
         chosenThreshold !== undefined ? chosenThreshold : null
       );
+      setPersistedDebug(chosenDebug !== undefined ? chosenDebug : false);
     },
-    [chosenModel, chosenThreshold, setPersistedModel, setPersistedThreshold]
+    [
+      chosenModel,
+      chosenThreshold,
+      chosenDebug,
+      setPersistedModel,
+      setPersistedThreshold,
+      setPersistedDebug,
+    ]
   );
 
   useEffect(() => {
@@ -59,32 +72,39 @@ export function ModelSettings({ onChangeModelSettings }) {
         const new_model = Object.keys(res)[0];
         setChosenModel(new_model);
         setChosenThreshold(res[new_model]);
-        onChangeModelSettings(new_model, res[new_model]);
+        onChangeModelSettings(new_model, res[new_model], chosenDebug);
       }
     });
-  }, [chosenModel]);
+  }, [chosenModel, chosenDebug]);
   const handleModelChange = useCallback(
     (event) => {
       const new_model = event.target.value;
       setChosenModel(new_model);
       setChosenThreshold(models[new_model]);
-      onChangeModelSettings(new_model, models[new_model]);
+      onChangeModelSettings(new_model, models[new_model], chosenDebug);
     },
-    [models, onChangeModelSettings]
+    [models, onChangeModelSettings, chosenDebug]
+  );
+  const handleDebug = useCallback(
+    (event) => {
+      const new_debug = event.target.checked;
+      setChosenDebug(new_debug);
+      onChangeModelSettings(chosenModel, chosenThreshold, new_debug);
+    },
+    [onChangeModelSettings]
   );
   const handleThresholdChange = useCallback(
     (_, val) => {
       setChosenThreshold(val);
     },
-    [chosenModel, onChangeModelSettings]
+    [chosenModel]
   );
   const commitThresholdChange = useCallback(
-      (_, val) => {
-          console.log('commit');
-          setChosenThreshold(val);
-          onChangeModelSettings(chosenModel, val);
-      },
-      [chosenModel, onChangeModelSettings]
+    (_, val) => {
+      setChosenThreshold(val);
+      onChangeModelSettings(chosenModel, val, chosenDebug);
+    },
+    [chosenModel, chosenDebug, onChangeModelSettings]
   );
   const loaded = Object.keys(models).length > 0;
   return (
@@ -119,23 +139,39 @@ export function ModelSettings({ onChangeModelSettings }) {
             onChange={handleThresholdChange}
             onChangeCommitted={commitThresholdChange}
           />
-          <FormHelperText>Выберите порог</FormHelperText>
+          <FormHelperText>
+            Выберите приемлемый уровень фильтрации
+          </FormHelperText>
         </FormControl>
       )}
 
       {loaded && (
-        <FormControl>
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            className={classes.button}
-            onClick={handlePersist}
-            startIcon={<SaveIcon />}
-          >
-            Сохранить
-          </Button>
-        </FormControl>
+        <Fragment>
+          <FormControl className={classes.formControl}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={chosenDebug}
+                  onChange={handleDebug}
+                  name="debug"
+                />
+              }
+              label="Debug"
+            />
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              className={classes.button}
+              onClick={handlePersist}
+              startIcon={<SaveIcon />}
+            >
+              Сохранить
+            </Button>
+          </FormControl>
+        </Fragment>
       )}
     </Fragment>
   );
