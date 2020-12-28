@@ -1,6 +1,7 @@
 import pathlib
 import joblib
 import json
+from tensorflow import keras
 import tensorflow as tf
 
 from keras.preprocessing.sequence import pad_sequences
@@ -27,15 +28,18 @@ class CnnModel(Model):
         super().__init__('CNN', 0.5)
         with open(MODEL_CONFIG_FILEPATH, 'r') as fin:
             json_config_loaded = json.load(fin)
+
+        self._session = tf.Session()
+        keras.backend.set_session(self._session)
+
         self._model = model_from_json(json_config_loaded)
         self._model.load_weights(MODEL_WEIGHTS_FILEPATH)
         self._tokenizer = joblib.load(TOKENIZER_FILEPATH)
 
     def score(self, twit: Twit) -> ModelResult:
         text = preprocess_text(twit.text)
-        session = tf.Session()
-        with session.as_default():
-            with session.graph.as_default():
+        with self._session.as_default():
+            with self._session.graph.as_default():
                 text = get_sequences(self._tokenizer, [text])
                 pred = self._model.predict(text)
                 pred = float(pred[0][0])
