@@ -30,9 +30,7 @@ class CnnModel(Model):
             json_config_loaded = json.load(fin)
         self._model = model_from_json(json_config_loaded)
         self._model.load_weights(MODEL_WEIGHTS_FILEPATH)
-
-        with open('tokenizer.pkl', 'rb') as fin:
-            self._tokenizer = joblib.load(fin)
+        self._tokenizer = joblib.load(TOKENIZER_FILEPATH)
 
     def score(self, twit: Twit) -> ModelResult:
         text = preprocess_text(twit.text)
