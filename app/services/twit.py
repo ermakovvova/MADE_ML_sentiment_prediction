@@ -12,7 +12,7 @@ class TwitService:
         scores = self._model_service.score(twit)
         return ScoredTwit(twit, scores)
 
-    def get_twits(self, page, limit=50) -> PagedResult:
+    def get_twits(self, page, limit=20) -> PagedResult:
         twits = self._dao.get_twits(page, limit)
         count_twits = self._dao.count()
         return PagedResult(list(map(self.score, twits)), count_twits, page, limit)

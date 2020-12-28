@@ -4,6 +4,7 @@ import { ModelSettings } from "./ModelSettings";
 import React, { Fragment, useState } from "react";
 import {
   DEFAULT_MODEL,
+  useDebug,
   useModel,
   useThreshold,
 } from "../persistence/model_settings";
@@ -11,10 +12,12 @@ import {
 export function TwitComponent() {
   const [persistedModel, setPersistedModel] = useModel(DEFAULT_MODEL);
   const [persistedThr, setPersistedThr] = useThreshold(null);
+  const [persistedDebug, setPersistedDebug] = useDebug(false);
 
   const [modelSetting, setModelSetting] = useState({
     model: persistedModel,
     thr: persistedThr,
+    debug: persistedDebug,
   });
   return (
     <Fragment>
@@ -24,9 +27,9 @@ export function TwitComponent() {
         </Grid>
         <Grid item xs={2}>
           <ModelSettings
-            onChangeModelSettings={(model, thr) => {
-              console.log("change", model, thr);
-              setModelSetting({ model, thr });
+            onChangeModelSettings={(model, thr, debug) => {
+              console.log("change model setting", model, thr, debug);
+              setModelSetting({ model, thr, debug });
             }}
           />
         </Grid>

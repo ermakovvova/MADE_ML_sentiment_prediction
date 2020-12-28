@@ -4,6 +4,7 @@ from pymongo import MongoClient
 import dao
 import models
 import services
+from models.cnn_model import CnnModel
 from models.naive_model import NaiveModel
 from models.cnn_model import CnnModel
 

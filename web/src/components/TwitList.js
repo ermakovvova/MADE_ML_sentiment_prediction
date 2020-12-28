@@ -3,32 +3,46 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Pagination from "@material-ui/lab/Pagination";
 import { Twit } from "./Twit";
 import { DEFAULT_MODEL } from "../persistence/model_settings";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 function load_twits(page) {
   return fetch(`/api/twits?page=${page}`).then((res) => res.json());
 }
+
+const useStyles = makeStyles((theme) => ({
+  card: {
+    padding: 2,
+    margin: 5,
+  },
+  author: {},
+  text: {},
+  acc: { "flex-direction": "column" },
+  full: { flex: "0 0 100%" },
+}));
 
 function filter(twits, setting) {
   const { model, thr } = setting;
   if (model === DEFAULT_MODEL) {
     return twits;
   }
-  console.log("filter by ", model, thr);
-  return Array.from(twits).filter((t) => {
-    const model_not_exists = !(model in t["model_results"]);
+  return Array.from(twits).map((twit) => {
+    const model_not_exists = !(model in twit["model_results"]);
     const thr_le_score =
       thr !== null &&
-      model in t["model_results"] &&
-      t["model_results"][model]["score"] <= thr;
+      model in twit["model_results"] &&
+      twit["model_results"][model]["score"] >= thr;
     const thr_null_but_positive =
       thr === null &&
-      model in t["model_results"] &&
-      !t["model_results"][model]["is_negative"];
-    return model_not_exists || thr_le_score || thr_null_but_positive;
+      model in twit["model_results"] &&
+      !twit["model_results"][model]["is_negative"];
+    twit["show"] = model_not_exists || thr_le_score || thr_null_but_positive;
+    return { ...twit };
   });
 }
 
 export function TwitList({ modelSetting }) {
+  const classes = useStyles();
+
   const [page, setPage] = useState(0);
   const [items, setItems] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -49,10 +63,20 @@ export function TwitList({ modelSetting }) {
   useEffect(() => {
     handleChange(null, 0).then(() => setInited(true));
   }, [inited]);
+  const debug = "debug" in modelSetting && modelSetting["debug"];
   return (
     <Fragment>
       {loading && <CircularProgress />}
-      {!loading && inited && filter(items, modelSetting).map(Twit)}
+      {!loading &&
+        inited &&
+        filter(items, modelSetting).map((twit) => (
+          <Twit
+            twit_res={twit}
+            classes={classes}
+            key={twit.twit.id}
+            debug={debug}
+          />
+        ))}
       {inited && (
         <Pagination count={totalPages} page={page} onChange={handleChange} />
       )}
