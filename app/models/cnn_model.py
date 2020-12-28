@@ -35,6 +35,6 @@ class CnnModel(Model):
     def score(self, twit: Twit) -> ModelResult:
         text = preprocess_text(twit.text)
         text = get_sequences(self._tokenizer, [text])
-        pred = self._model.predict_proba(text)
+        pred = self._model.predict(text)
         pred = float(pred[0][0])
         return ModelResult(pred, pred > self.threshold)
